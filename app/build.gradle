@@ -1,29 +1,54 @@
 apply plugin: 'com.android.application'
 
+// Versioning information
+def versionMajor = 0
+def versionMinor = 3
+def versionPatch = 0
+
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
     defaultConfig {
+
         applicationId "com.orogersilva.fanaticofc"
-        minSdkVersion 15
-        targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch * 1
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}-SNAPSHOT"
+
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
+
         release {
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
+// Show test status in console.
+tasks.withType(Test) {
+
+    testLogging {
+        events "passed", "failed"
+    }
+}
+
 dependencies {
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+
+    testCompile "junit:junit:$rootProject.junitLibraryVersion"
+
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$rootProject.espressoLibraryVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    testCompile 'junit:junit:4.12'
 }
